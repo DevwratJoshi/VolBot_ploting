@@ -7,9 +7,9 @@ import math
 if len(sys.argv) < 4:
     print("Usage: plotPosChange.py {R/B/A (The parameter to change)} {value of second param in order RBA} {value of third param in RBA}")
     sys.exit()
-big = 60
-small = 20
-mid = 30
+big = 60*2
+small = 20*2
+mid = 30*2
 R_list = ['120', '180', '240']
 B_list = [str(int(i)) for i in np.linspace(20,180,9)]
 A_list = [str(int(i)) for i in np.linspace(10,90,9)]
@@ -126,8 +126,11 @@ else:
 
 ax.set_ylim(bottom = 0)
 ax.set_xticks(np.arange(len(list1)))
-ax.set_yticks(np.linspace(0, 900/mid, 31))
-ax.set_xticklabels([str(i) for i in list1])
+ax.set_yticks(np.linspace(0, mid*30/mid, 16))
+ax.set_xticklabels([int(i) for i in list1])
 ax.bar(list1, xStats[:,0], width=0.4)
 ax.errorbar(list1, xStats[:,0], xStats[:,1], ecolor='black', elinewidth=0.8, capsize=6)
+ax.tick_params(labelsize=18)
+ax.set_xlabel("Angle width of the flashlight", fontsize='xx-large')
+ax.set_ylabel("Horizontal distance travelled [module lengths]", fontsize='xx-large')
 plt.show()
