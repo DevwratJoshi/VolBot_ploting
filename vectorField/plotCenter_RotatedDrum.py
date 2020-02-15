@@ -27,27 +27,22 @@ extention = ""
 def makeColourTuple(*ctup): #Makes a colour tuple using rgb values out of 255
     return tuple([round(float(i/255.0), 2) if i < 255 else 255.0 for i in ctup])
 
+if len(sys.argv) < 2:
+        print("Usage: python plotCenter.py {1 if run newton-raphson, else 0} {initial x to run newton raphson} {initial y to run newton raphson} ")
+        sys.exit()
 if len(sys.argv) < 4:
-        print("Usage: python plotCenter.py {down from 0 to 10}{Percentage of active modules} {1 if run newton-raphson, else 0} {initial x to run newton raphson} {initial y to run newton raphson} ")
-        sys.exit()
-if len(sys.argv) < 6:
-    if int(sys.argv[3]) == 1:
+    if int(sys.argv[1]) == 1:
         print("Please specify netwon raphson parameters")
-        print("Usage: python plotCenter.py {down from 0 to 10}{Percentage of active modules} {1 if run newton-raphson, else 0} {initial x to run newton raphson} {initial y to run newton raphson} {times to run newton raphson (if last arg is true)} ")
+        print("Usage: python plotCenter.py {1 if run newton-raphson, else 0} {initial x to run newton raphson} {initial y to run newton raphson} ")
         sys.exit()
 
-down = str(sys.argv[1])
-
-if int(down) > 10 or int(down) < 0:
-    print("Down is out of range. Enter a value between 0 and 10 (inclusive)")
-    sys.exit()
-active_modules = str(sys.argv[2])
 
 
-url = "/home/dev/sketchbookProcessing/IROS_Sims/VolBot_Flow/PIV_data_constant_top_1_lowfreqtest/middle/sections_max20/Probability" + active_modules +  "/"
 
-dataX = pd.read_csv(url + "X" + "/" + "bottom" + down +  extention, header=None, usecols = [i for i in range(20)])
-dataY = pd.read_csv(url + "Y" + "/" + "bottom" + down +  extention, header=None, usecols = [i for i in range(20)])
+url = "/home/dev/sketchbookProcessing/VolBot_Rotated_Drum_PIV/Data/sections_max20/PIV_data/"
+
+dataX = pd.read_csv(url + "X" + "/" + "PIV_data" +  extention, header=None, usecols = [i for i in range(20)])
+dataY = pd.read_csv(url + "Y" + "/" + "PIV_data" +  extention, header=None, usecols = [i for i in range(20)])
 
 
 trueX = np.copy(dataX.values)
@@ -81,7 +76,7 @@ f = interpolate.RectBivariateSpline(xlin, ylin, np.transpose(trueX_norm))
 g = interpolate.RectBivariateSpline(xlin, ylin, np.transpose(trueY_norm))
 
 
-fig, ax = plt.subplots(1,1, figsize=(12,12))
+fig, (ax1, ax2) = plt.subplots(ncols=2, figsize=(18,8))
 
 epsilon = 0.0001 
 points = [] # This is a list that holds the points close to epsilon
@@ -89,16 +84,14 @@ points = [] # This is a list that holds the points close to epsilon
 
 xp = 10
 yp = 10
-
 x_low = xp
 y_low = yp
 
 X = np.zeros((2,1))
 counter = 0
-print(int(sys.argv[2]))
-if int(sys.argv[3]) == 1: # Newton raphson to be run (Center to be found)
-    xp = float(sys.argv[4])
-    yp = float(sys.argv[5])
+if int(sys.argv[1]) == 1: # Newton raphson to be run (Center to be found)
+    xp = float(sys.argv[2])
+    yp = float(sys.argv[3])
     #Start newton raphson algorithm
     while 1:     
          X[0][0] = xp
@@ -130,7 +123,8 @@ print(counter)
 xp= [xp]
 yp = [yp]
 print("X_pos = {}, y_pos = {}".format(xp, yp))
-ax.scatter([xp], [yp], color='red', marker='x', s=100)
+ax1.scatter([xp], [yp], color='red', marker='x', s=100)
+ax2.scatter([xp], [yp], color='red', marker='x', s=100)
 #ax.scatter(x_low, y_low, color='blue', marker='x')
 #ax.scatter(x_low, y_low, color='blue', marker='x')
 #der = der[:-1, :-1]
@@ -140,7 +134,8 @@ ax.scatter([xp], [yp], color='red', marker='x', s=100)
 #im = ax.pcolormesh(derX, derY, der, cmap=cmap, norm=norm)
 #fig.colorbar(im, ax=ax)
 
-ax.quiver(x,y,trueX_norm, trueY_norm, pivot='mid')
+ax1.quiver(x,y,trueX_norm, trueY_norm, pivot='mid')
+ax2.quiver(x,y,trueX_norm, trueY_norm, pivot='mid')
 bottom_counter = int(down) - int(up)
 side = ""
 
@@ -150,12 +145,14 @@ else:
     bottom_counter *= -1
     side = 'left'
 
-ax.set_title("Freqency {}, Amplitude {}, {} side, i = {}".format(freq, amp, side, bottom_counter))
-ax.set_xlabel("X position", fontsize='xx-large')
-ax.set_ylabel("Y position", fontsize='xx-large')
+ax1.set_title("Flow in a rotated drum with RPM = 11.6")
+ax2.set_title("Flow in a rotated drum with RPM = 11.6")
+ax1.set_xlabel("X position", fontsize='xx-large')
+ax2.set_xlabel("Y position", fontsize='xx-large')
+ax1.set_ylabel("X position", fontsize='xx-large')
+ax2.set_ylabel("Y position", fontsize='xx-large')
 plt.xticks(np.arange(0, 20+1, 1))
 plt.yticks(np.arange(0, 20+1, 1))
-ax.tick_params(labelsize=16)
 xu = float(up) *(20.0/(10.0))
 yu = 20
 xd = float(down)*(20.0/10.0)
@@ -163,5 +160,5 @@ yd = 0
 
 
 plt.gca().set_aspect('equal', adjustable='box')
-plt.plot([xu, xd], [yu, yd], color=(makeColourTuple(112, 48, 160)), linewidth=2)
+#plt.plot([xu, xd], [yu, yd], color=(makeColourTuple(112, 48, 160)), linewidth=2)
 plt.show()
