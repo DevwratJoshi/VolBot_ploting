@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 data_files = 5 #The number of data files
-folder = "/home/dev/sketchbookProcessing/Horizontal_Bed_Simulations/Basic_Shaking_Init_Final_Posns/data/Yes_Friction_Yes_Size/Big_Low_Friction/"
+folder = "/home/dev/sketchbookProcessing/Horizontal_Bed_Simulations/Basic_Shaking_Init_Final_Posns/data/No_Friction_Yes_Size/Friction_Low/"
 ext = ".txt" #Data file extention
 initial_points_low_friction = []
 initial_points_high_friction = []
