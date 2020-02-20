@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 data_files = 5 #The number of data files
-folder = "/home/dev/sketchbookProcessing/Horizontal_Bed_Simulations/Basic_Shaking_Init_Final_Posns/data/No_Friction_Yes_Size/Friction_Low/"
+folder = "/home/dev/sketchbookProcessing/Horizontal_Bed_Simulations/Basic_Shaking_Init_Final_Posns/data/Yes_Friction_Yes_Size/Big_High_Friction/"
 ext = ".txt" #Data file extention
 initial_points_low_friction = []
 initial_points_high_friction = []
@@ -12,7 +12,7 @@ final_points_high_friction = []
 
 fig,(ax_initial, ax_final) = plt.subplots(1,2, figsize=(15,10))
 
-for i in range(1, 5+1):
+for i in range(1, 2):
     data_initial = pd.read_csv(folder+"Initial/" + str(i) + ext, header=None, index_col=False)
     data_final = pd.read_csv(folder+"Final/" + str(i) + ext, header=None, index_col=False)
 
